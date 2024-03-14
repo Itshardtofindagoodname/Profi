@@ -43,8 +43,8 @@ function Upload() {
       <div className="flex justify-between items-center my-4">
         <div>
         <button
-            className={`text-black mr-2 font-bold ${
-              !isLinksSection ? 'opacity-50 font-normal' : 'text-blue-500 underline underline-offset-8'
+            className={`text-black mr-3 font-bold text-xl ${
+              !isLinksSection ? ' font-normal' : 'text-blue-500 underline underline-offset-2'
             }`}
             onClick={toggleLinksSection}
             disabled={isLinksSection}
@@ -52,8 +52,8 @@ function Upload() {
             Link
           </button>
           <button
-            className={` text-black font-bold ${
-              isLinksSection ? 'opacity-50 font-normal' : ' text-blue-500 underline underline-offset-8'
+            className={` text-black font-bold text-xl ${
+              isLinksSection ? ' font-normal' : ' text-blue-500 underline underline-offset-2'
             }`}
             onClick={toggleDocumentsSection}
             disabled={!isLinksSection}
@@ -74,7 +74,7 @@ function Upload() {
               onChange={handleFileSelection}
             />
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              className="bg-blue-700 text-white px-4 py-2 rounded-md"
               onClick={handleUploadFiles}
             >
               Upload Files
