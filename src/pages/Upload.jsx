@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
-import Modal from '../components/Model';
+import React, { useState, useRef } from "react";
+import Modal from "../components/Model";
 import { FaLinkSlash } from "react-icons/fa6";
 import { CiFileOff, CiFileOn } from "react-icons/ci";
+import axios from "axios";
 
 function Upload() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,26 +29,62 @@ function Upload() {
 
   const handleFileSelection = (event) => {
     const selectedFiles = Array.from(event.target.files);
-    const fileObjects = selectedFiles.map(file => ({
+    const fileObjects = selectedFiles.map((file) => ({
       name: file.name,
     }));
-    setDocuments([...documents, ...fileObjects]);
+    const form = new FormData();
+    form.append("file", selectedFiles[0]);
+    form.append("type", "pdf");
+
+    axios({
+      method: "post",
+      url: "http://127.0.0.1:5000/upload",
+      data: form,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(function (response) {
+        console.log(response);
+        setDocuments([...documents, ...fileObjects]);
+        return response;
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
   };
 
   const handleLinkSubmission = (linkData) => {
-    setLinks([...links, linkData]);
+    const form = new FormData();
+    form.append("url", linkData.links);
+    form.append("type", linkData.type);
+
+    axios({
+      method: "post",
+      url: "http://127.0.0.1:5000/upload",
+      data: form,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(function (response) {
+        console.log(response);
+        setLinks([...links, { ...linkData, taskId: response }]);
+        return response;
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
   };
-  const handleSubmit = () =>{
-    console.log('Submitted')
-  }
+  const handleSubmit = () => {
+    console.log("Submitted");
+  };
 
   return (
     <div className="container h-screen flex flex-col mx-auto p-4">
       <div className="flex justify-between items-center my-4">
         <div>
-        <button
+          <button
             className={`text-black mr-3 font-bold text-xl ${
-              !isLinksSection ? ' font-normal' : 'text-blue-500 underline underline-offset-2'
+              !isLinksSection
+                ? " font-normal"
+                : "text-blue-500 underline underline-offset-2"
             }`}
             onClick={toggleLinksSection}
             disabled={isLinksSection}
@@ -56,7 +93,9 @@ function Upload() {
           </button>
           <button
             className={` text-black font-bold text-xl ${
-              isLinksSection ? ' font-normal' : ' text-blue-500 underline underline-offset-2'
+              isLinksSection
+                ? " font-normal"
+                : " text-blue-500 underline underline-offset-2"
             }`}
             onClick={toggleDocumentsSection}
             disabled={!isLinksSection}
@@ -65,7 +104,11 @@ function Upload() {
           </button>
         </div>
         {isLinksSection ? (
-          <Modal isModalOpen={isModalOpen} toggleModal={toggleModal} handleLinkSubmission={handleLinkSubmission} />
+          <Modal
+            isModalOpen={isModalOpen}
+            toggleModal={toggleModal}
+            handleLinkSubmission={handleLinkSubmission}
+          />
         ) : (
           <div>
             <input
@@ -73,7 +116,7 @@ function Upload() {
               accept="application/pdf, .doc, .docx"
               multiple
               ref={fileInputRef}
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
               onChange={handleFileSelection}
             />
             <button
@@ -90,40 +133,46 @@ function Upload() {
           {isLinksSection ? (
             links.length > 0 ? (
               links.map((link, index) => (
-                <div key={index} className="m-2 p-4 rounded-lg bg-blue-100 h-40 w-40 text-center flex flex-col justify-center">
-                  <h1 className='text-xl font-bold '>{link.type}</h1>
-                  <hr className=' border-t-2 border-black'/>
-                  <h2 className='text-md overflow-hidden mt-2 text-indigo-300'>{link.links}</h2>
+                <div
+                  key={index}
+                  className="m-2 p-4 rounded-lg bg-blue-100 h-40 w-40 text-center flex flex-col justify-center"
+                >
+                  <h1 className="text-xl font-bold ">{link.type}</h1>
+                  <hr className=" border-t-2 border-black" />
+                  <h2 className="text-md overflow-hidden mt-2 text-indigo-300">
+                    {link.links}
+                  </h2>
                 </div>
               ))
             ) : (
               <div className="flex flex-row">
-                <p className='font-thin'>No links added yet</p>
-                <FaLinkSlash size={25} className='ml-2' />
+                <p className="font-thin">No links added yet</p>
+                <FaLinkSlash size={25} className="ml-2" />
               </div>
             )
+          ) : documents.length > 0 ? (
+            documents.map((document, index) => (
+              <div
+                key={index}
+                className="m-2 p-4 rounded-lg bg-blue-100 h-40 w-40 flex flex-col"
+              >
+                <CiFileOn size={40} />
+                <p className="mt-2 text-md font-light">{document.name}</p>
+              </div>
+            ))
           ) : (
-            documents.length > 0 ? (
-              documents.map((document, index) => (
-                <div key={index} className="m-2 p-4 rounded-lg bg-blue-100 h-40 w-40 flex flex-col">
-                  <CiFileOn size={40}/>
-                  <p className='mt-2 text-md font-light'>{document.name}</p>
-                </div>
-              ))
-            ) : (
-              <div className="flex flex-row items-center">
-                <p className='font-thin'>No documents added yet</p>
-                <CiFileOff size={25} className='ml-2' />
-              </div>
-            )
+            <div className="flex flex-row items-center">
+              <p className="font-thin">No documents added yet</p>
+              <CiFileOff size={25} className="ml-2" />
+            </div>
           )}
         </div>
       </div>
       <button
-              className="bg-blue-700 text-white mt-4 w-40 px-4 py-2 rounded-md"
-              onClick={handleSubmit}
-            >
-              Submit
+        className="bg-blue-700 text-white mt-4 w-40 px-4 py-2 rounded-md"
+        onClick={handleSubmit}
+      >
+        Submit
       </button>
     </div>
   );
