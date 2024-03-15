@@ -26,7 +26,7 @@ const markdown = `## Tech Stack
 - [ ] Create a customer dashboard with order history and tracking
 - [ ] Integrate with third-party services for food delivery and payment processing
 - [ ] Design a user-friendly and intuitive interface
-- [ ] Ensure scalability and performance for high traffic volumes
+- [ ] Ensure scalability and performance for high traffic volume
 - [ ] Implement push notifications for order updates and promotions
 
 ## Project Features
