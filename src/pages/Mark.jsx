@@ -1,51 +1,128 @@
-import React from 'react'
-import {createRoot} from 'react-dom/client'
-import Markdown from 'react-markdown'
+import axios from "axios";
+import React, { useState } from "react";
 
-const markdown = `## Tech Stack
+export default function Mark() {
+  const [query, setQuery] = useState("");
+  const [data, setData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-- Frontend: React Native
-- Backend: Node.js, Express.js
-- Database: MongoDB
-- Payment Gateway: Stripe
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!query) {
+      setError("Please enter an app idea.");
+      return;
+    }
+    setLoading(true);
+    setError(null);
 
-## Color Palettes
+    const url = `http://127.0.0.1:5000/plan?q=${query}`;
+    try {
+      const response = await axios.get(url);
+      setData(response.data);
+    } catch (error) {
+      setError("Error fetching data. Please try again later.");
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-- **Primary:** #FF5A5F
-- **Secondary:** #F0F0F0
-- **Accent:** #242424
-- **Neutral:** #FFFFFF, #888888
+  const handleChange = (event) => {
+    setQuery(event.target.value);
+    setError(null); // Reset error when input changes
+  };
 
-## To-Do Items
+  const {
+    AppNames = [],
+    ProjectFeatures = [],
+    colorPalette = [],
+    techStack = [],
+    todoItems = [],
+  } = data;
 
-- [ ] Implement user authentication and authorization
-- [ ] Allow users to search for restaurants and dishes
-- [ ] Enable users to place orders and track their delivery status
-- [ ] Integrate payment gateway functionality
-- [ ] Implement GPS tracking for delivery drivers
-- [ ] Create a customer dashboard with order history and tracking
-- [ ] Integrate with third-party services for food delivery and payment processing
-- [ ] Design a user-friendly and intuitive interface
-- [ ] Ensure scalability and performance for high traffic volume
-- [ ] Implement push notifications for order updates and promotions
-
-## Project Features
-
-- **User-Friendly Interface:** Easy-to-use app with intuitive navigation.
-- **Extensive Restaurant Directory:** Wide selection of restaurants and cuisines to choose from.
-- **Real-Time Order Tracking:** Live updates on order progress and estimated delivery time.
-- **Secure Payment Processing:** Safe and seamless payment transactions through integrated payment gateway.
-- **Personalized Recommendations:** Tailored suggestions based on user preferences and past orders.
-- **Loyalty Program:** Rewards system to encourage repeat orders.
-- **Integration with Third-Party Services:** Compatibility with food delivery and payment processing partners.
-- **Driver Management:** System for managing delivery drivers and optimizing delivery routes.
-- **Data Analytics:** Comprehensive insights into app usage, order patterns, and customer feedback.`
-function Mark() {
   return (
-    <>
-    <Markdown>{markdown}</Markdown>
-    </>
-  )
+    <div className="bg-gray-200 h-[800px] overflow-y-scroll py-8 px-4 sm:px-0">
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-3xl font-bold mb-8 text-center">Project Details</h1>
+        <form onSubmit={handleSubmit} className="mb-8">
+          <div className="flex items-center justify-center mb-4">
+            <input
+              id="appIdea"
+              type="text"
+              value={query}
+              onChange={handleChange}
+              placeholder="Enter App Idea"
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+            />
+            <button
+              type="submit"
+              className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-md"
+            >
+              Submit
+            </button>
+          </div>
+          {error && <p className="text-red-500 text-center">{error}</p>}
+        </form>
+        {loading ? (
+          <p className="text-center">Loading...</p>
+        ) : (
+          <div className="max-w-3xl mx-auto">
+            <div className="mb-8">
+              <h2 className="text-xl font-semibold mb-2">Apps:</h2>
+              <ul className="list-disc pl-4">
+                {AppNames.map((app, index) => (
+                  <li key={index}>{app}</li>
+                ))}
+              </ul>
+              <ul></ul>
+            </div>
+            <div className="mb-8">
+              <h2 className="text-xl font-semibold mb-2">Project Features:</h2>
+              <ul className="list-disc pl-4">
+                {ProjectFeatures.map((feature, index) => (
+                  <li key={index}>{feature}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="mb-8">
+              <h2 className="text-xl font-semibold mb-2">Color Palette:</h2>
+              <div className="flex">
+                {colorPalette.map((color, index) => (
+                  <div
+                    key={index}
+                    className="w-12 h-12 mr-4 rounded-lg shadow-lg"
+                    style={{ backgroundColor: color }}
+                  ></div>
+                ))}
+              </div>
+            </div>
+            <div className="mb-8">
+              <h2 className="text-xl font-semibold mb-2">Tech Stack:</h2>
+              <ul className="list-disc pl-4">
+                {techStack.map((tech, index) => (
+                  <li key={index}>{tech}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="mb-8">
+              <h2 className="text-xl font-semibold mb-2">To-Do Items:</h2>
+              <ul className="list-disc pl-4">
+                {todoItems.map((item, index) => (
+                  <li key={index} className="flex items-center mb-2">
+                    <input
+                      type="checkbox"
+                      id={`todo-${index}`}
+                      className="mr-2"
+                    />
+                    <label htmlFor={`todo-${index}`}>{item}</label>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
-
-export default Mark
