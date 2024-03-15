@@ -4,6 +4,7 @@ import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
 import Home from './Home';
 import Upload from './Upload';
+import Mark from './Mark'
 
 function Dashboard() {
   return (
@@ -15,6 +16,7 @@ function Dashboard() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/upload" element={<Upload />} />
+            <Route path="/mark" element={<Mark />} />
           </Routes>
         </div>
       </div>
