@@ -26,6 +26,15 @@ function Sidebar() {
                 </button>
               </span>
             </NavLink>
+            <NavLink to="/mark" className={({ isActive }) => isActive ? 'group flex items-center my-2 transition-colors duration-200 rounded-lg bg-gray-100' : 'group flex items-center my-2 transition-colors duration-200 rounded-lg'} end>
+              <span className="text-sm font-semibold flex items-center w-full rounded-xl p-2">
+                <IoHomeSharp className="mr-2 group-focus:text-blue-400"/>
+                <span className="flex-grow group-focus:text-blue-400">Markdown</span>
+                <button type="button" className="hidden group-focus:inline-block text-xs">
+                  <CiMenuKebab/>
+                </button>
+              </span>
+            </NavLink>
             <NavLink to="/upload" className={({ isActive }) => isActive ? 'group flex items-center my-2 transition-colors duration-200 rounded-lg bg-gray-100' : 'group flex items-center my-2 transition-colors duration-200 rounded-lg'}>
               <span className="text-sm font-semibold flex items-center w-full rounded-xl p-2">
                 <FaChartPie className="mr-2 group-focus:text-blue-400"/>
