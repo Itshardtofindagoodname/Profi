@@ -42,7 +42,7 @@ export default function Mark() {
   } = data;
 
   return (
-    <div className="bg-gray-200 h-[800px] overflow-y-scroll py-8 px-4 sm:px-0">
+    <div className="bg-gray-200 h-[800px] overflow-y-scroll py-12 px-4 sm:px-0">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-3xl font-bold mb-8 text-center">Project Details</h1>
         <form onSubmit={handleSubmit} className="mb-8">
@@ -62,64 +62,86 @@ export default function Mark() {
               Submit
             </button>
           </div>
-          {error && <p className="text-red-500 text-center">{error}</p>}
+          {error ? <p className="text-red-500 text-center">{error}</p>:""}
         </form>
         {loading ? (
           <p className="text-center">Loading...</p>
         ) : (
           <div className="max-w-3xl mx-auto">
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold mb-2">Apps:</h2>
+            {AppNames.length ? <div className="mb-8">
+              <h2 className="text-xl font-semibold mb-2">Suggested App Names:</h2>
               <ul className="list-disc pl-4">
                 {AppNames.map((app, index) => (
                   <li key={index}>{app}</li>
                 ))}
               </ul>
               <ul></ul>
-            </div>
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold mb-2">Project Features:</h2>
-              <ul className="list-disc pl-4">
-                {ProjectFeatures.map((feature, index) => (
-                  <li key={index}>{feature}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold mb-2">Color Palette:</h2>
-              <div className="flex">
-                {colorPalette.map((color, index) => (
-                  <div
-                    key={index}
-                    className="w-12 h-12 mr-4 rounded-lg shadow-lg"
-                    style={{ backgroundColor: color }}
-                  ></div>
-                ))}
+            </div>: ""}
+
+            {ProjectFeatures.length ? (
+              <div className="mb-8">
+                <h2 className="text-xl font-semibold mb-2">
+                  Project Features:
+                </h2>
+                <ul className="list-disc pl-4">
+                  {ProjectFeatures.map((feature, index) => (
+                    <li key={index}>{feature}</li>
+                  ))}
+                </ul>
               </div>
-            </div>
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold mb-2">Tech Stack:</h2>
-              <ul className="list-disc pl-4">
-                {techStack.map((tech, index) => (
-                  <li key={index}>{tech}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold mb-2">To-Do Items:</h2>
-              <ul className="list-disc pl-4">
-                {todoItems.map((item, index) => (
-                  <li key={index} className="flex items-center mb-2">
-                    <input
-                      type="checkbox"
-                      id={`todo-${index}`}
-                      className="mr-2"
-                    />
-                    <label htmlFor={`todo-${index}`}>{item}</label>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            ) : (
+              ""
+            )}
+
+            {colorPalette.length ? (
+              <div className="mb-8">
+                <h2 className="text-xl font-semibold mb-2">Color Palette:</h2>
+                <div className="flex">
+                  {colorPalette.map((color, index) => (
+                    <div
+                      key={index}
+                      className="w-12 h-12 mr-4 rounded-lg shadow-lg"
+                      style={{ backgroundColor: color }}
+                    ></div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+
+            {techStack.length ? (
+              <div className="mb-8">
+                <h2 className="text-xl font-semibold mb-2">Tech Stack:</h2>
+                <ul className="list-disc pl-4">
+                  {techStack.map((tech, index) => (
+                    <li key={index}>{tech}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              ""
+            )}
+
+            {todoItems.length ? (
+              <div className="mb-8">
+                <h2 className="text-xl font-semibold mb-2">To-Do Items:</h2>
+                <ul className="list-disc pl-4">
+                  {todoItems.map((item, index) => (
+                    <li key={index} className="flex items-center mb-2">
+                      <input
+                        type="checkbox"
+                        id={`todo-${index}`}
+                        className="mr-2"
+                      />
+                      <label htmlFor={`todo-${index}`}>{item}</label>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         )}
       </div>
