@@ -37,6 +37,9 @@ function Upload() {
   const handleLinkSubmission = (linkData) => {
     setLinks([...links, linkData]);
   };
+  const handleSubmit = () =>{
+    console.log('Submitted')
+  }
 
   return (
     <div className="container h-screen flex flex-col mx-auto p-4">
@@ -116,6 +119,12 @@ function Upload() {
           )}
         </div>
       </div>
+      <button
+              className="bg-blue-700 text-white mt-4 w-40 px-4 py-2 rounded-md"
+              onClick={handleSubmit}
+            >
+              Submit
+      </button>
     </div>
   );
 }
