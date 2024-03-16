@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Modal from "../components/Model";
 import { FaLinkSlash } from "react-icons/fa6";
 import { CiFileOff, CiFileOn } from "react-icons/ci";
@@ -9,7 +9,16 @@ function Upload() {
   const [isLinksSection, setIsLinksSection] = useState(true);
   const [links, setLinks] = useState([]);
   const [documents, setDocuments] = useState([]);
+  const [loading, setLoading] = useState(false);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    // Fetch data from local storage on mount
+    const storedLinks = JSON.parse(localStorage.getItem("links")) || [];
+    const storedDocuments = JSON.parse(localStorage.getItem("documents")) || [];
+    setLinks(storedLinks);
+    setDocuments(storedDocuments);
+  }, []);
 
   const toggleLinksSection = () => {
     setIsLinksSection(true);
@@ -28,6 +37,7 @@ function Upload() {
   };
 
   const handleFileSelection = (event) => {
+    setLoading(true);
     const selectedFiles = Array.from(event.target.files);
     const fileObjects = selectedFiles.map((file) => ({
       name: file.name,
@@ -45,14 +55,17 @@ function Upload() {
       .then(function (response) {
         console.log(response);
         setDocuments([...documents, ...fileObjects]);
-        return response;
+        localStorage.setItem("documents", JSON.stringify([...documents, ...fileObjects]));
+        setLoading(false);
       })
-      .catch(function (response) {
-        console.log(response);
+      .catch(function (error) {
+        console.log(error);
+        setLoading(false);
       });
   };
 
   const handleLinkSubmission = (linkData) => {
+    setLoading(true);
     const form = new FormData();
     form.append("url", linkData.links);
     form.append("type", linkData.type);
@@ -66,12 +79,15 @@ function Upload() {
       .then(function (response) {
         console.log(response);
         setLinks([...links, { ...linkData, taskId: response }]);
-        return response;
+        localStorage.setItem("links", JSON.stringify([...links, { ...linkData, taskId: response }]));
+        setLoading(false);
       })
-      .catch(function (response) {
-        console.log(response);
+      .catch(function (error) {
+        console.log(error);
+        setLoading(false);
       });
   };
+
   const handleSubmit = () => {
     console.log("Submitted");
   };
@@ -129,6 +145,7 @@ function Upload() {
         )}
       </div>
       <div className=" mt-4 border-2 border-gray-300 p-4 rounded-lg h-96 flex flex-col">
+        {loading && <p>Loading...</p>}
         <div className="flex flex-wrap">
           {isLinksSection ? (
             links.length > 0 ? (

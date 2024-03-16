@@ -45,7 +45,7 @@ function Home() {
           <span className="text-md font-light text-gray-400 mb-2">
             Talk with your given Data
           </span>
-          <div className="w-full px-3 py-2 mb-3 border border-gray-300 rounded-lg h-[700px] overflow-y-scroll">
+          <div className="w-full px-3 py-2 mb-3 border border-gray-300 rounded-lg h-[500px] overflow-y-scroll">
             {/* // className:"[&>*]:bg-green-300" */}
             <MessageList
               className="message-list"
